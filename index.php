@@ -6,6 +6,10 @@ Class JsonRfc {
 	private static $rfcParams = array();
 	private static $jsonResults = null;
 	private static $config = array();
+	private static $format = null; // supported formats are 'json' and 'array' 
+	
+	private static $FORMAT_JSON = 0;
+	private static $FORMAT_ARRAY = 1;
 	
 	private static function check_api_key() {
 		$api_key = null;
@@ -64,9 +68,14 @@ Class JsonRfc {
 		);
 	}
 	
-	private static function parse_rfc_params() {
-		if (isset($_POST['jsonParams'])) {
+	private static function parse_rfc_params($params) {
+		if ($params) {
+			JsonRfc::$jsonParams = $params;
+		}
+		elseif (isset($_POST['jsonParams'])) {
 			JsonRfc::$jsonParams = $_POST['jsonParams'];
+		}
+		if (JsonRfc::$jsonParams) {
 			JsonRfc::$rfcParams = json_decode(JsonRfc::$jsonParams,true);
 			if (JsonRfc::$rfcParams == NULL) {
 				JsonRfc::$errors[] = "Invalid json";
@@ -166,11 +175,11 @@ Class JsonRfc {
 	
 	}
 	
-	public static function execute($params=null,$x509=null) {
+	public static function execute($params=null,$x509=null,$format=0) {
 		// if $params are provides, they can either be a JSON string or an array from a decoded jsonstring 
 		// if $params are not provided, the execute method will try to get the JsonParams string from post
 		if (JsonRfc::check_api_key()) {
-			if (JsonRfc::parse_rfc_params()) {
+			if (JsonRfc::parse_rfc_params($params)) {
 				JsonRfc::get_config($x509);
 				if (JsonRfc::call_rfc()) {
 					return JsonRfc::$jsonResults;
