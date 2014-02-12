@@ -8,8 +8,8 @@ Class JsonRfc {
 	private static $config = array();
 	private static $format = null; // supported formats are 'json' and 'array' 
 	
-	private static $FORMAT_JSON = 0;
-	private static $FORMAT_ARRAY = 1;
+	public static $FORMAT_JSON = 0;
+	public static $FORMAT_ARRAY = 1;
 	
 	private static function check_api_key() {
 		$api_key = null;
@@ -191,7 +191,7 @@ Class JsonRfc {
 			JsonRfc::$rfcResults = array();
 			JsonRfc::$rfcResults['error'] = true;
 			JsonRfc::$rfcResults['errorMessage'] = array();
-			foreach($errors as $error) {
+			foreach(JsonRfc::$errors as $error) {
 				array_push(JsonRfc::$rfcResults['errorMessage'],array("TYPE" => "E", "MESSAGE" => $error));
 			}
 		}
